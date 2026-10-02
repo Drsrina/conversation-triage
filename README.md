@@ -60,13 +60,3 @@ curl -X POST http://localhost:8000/predict \
 | F1 macro (sentimento) | TBD |
 | Hamming loss (tags) | TBD |
 | F1 samples (tags) | TBD |
-
-## Próximos passos
-
-- [ ] M1: Baseline com dados reais
-- [ ] M2: DistilBERT
-- [ ] M3: API + Docker
-- [ ] M4: Deploy no Cloud Run
-- [ ] M5: Frontend MVP
-- [ ] M6: Pipeline agendado + BigQuery
-- [ ] M7: Dashboard + README final
