@@ -4,6 +4,8 @@ import os
 import joblib
 from typing import List, Dict
 
+from src.data.preprocess import limpar_texto
+
 MODEL_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'models')
 
 
@@ -18,7 +20,8 @@ class TriageClassifier:
 
     def predict(self, text: str) -> Dict:
         """Retorna sentimento e tags para uma conversa."""
-        v = self.vectorizer.transform([text])
+        text_clean = limpar_texto(text)
+        v = self.vectorizer.transform([text_clean])
         sentiment = self.sentiment_model.predict(v)[0]
         tags_raw = self.tags_model.predict(v)[0]
         tags = [self.mlb.classes_[i] for i, val in enumerate(tags_raw) if val]

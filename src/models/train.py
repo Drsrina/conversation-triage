@@ -23,16 +23,16 @@ MODEL_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'models')
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 
-def train_baseline(df: pd.DataFrame, text_col: str = 'text_clean',
+def train_baseline(df: pd.DataFrame, text_col: str = 'text',
                    sentiment_col: str = 'sentiment',
                    tags_col: str = 'tags'):
     """Treina baseline TF-IDF + Logistic Regression para sentimento e tags."""
-    df = preprocess_df(df, text_col)
+    df = preprocess_df(df, col_text=text_col)
 
     # Split
-    X = df[text_col]
+    X = df['text_clean']
     y_s = df[sentiment_col]
-    y_t = df[tags_col]
+    y_t = split_tags(df[tags_col])
 
     X_train, X_test, y_s_train, y_s_test, y_t_train, y_t_test = train_test_split(
         X, y_s, y_t, test_size=0.2, random_state=42, stratify=y_s
@@ -89,27 +89,32 @@ def train_baseline(df: pd.DataFrame, text_col: str = 'text_clean',
 
 
 if __name__ == '__main__':
-    # Exemplo de uso com DataFrame dummy (substitua pelos dados reais)
-    data = pd.DataFrame({
-        'text': [
-            'Não consigo fazer login, o sistema dá erro!',
-            'Obrigado pelo atendimento, tudo perfeito!',
-            'Preciso de reembolso da última compra',
-            'O app crashes ao abrir a tela de perfil',
-        ],
-        'sentiment': ['negativo', 'positivo', 'neutro', 'negativo'],
-        'tags': [
-            'login|problema_técnico',
-            'atendimento',
-            'reembolso',
-            'problema_técnico|app',
-        ],
-    })
+    data_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'raw', 'conversas_ptbr.csv')
+    if os.path.exists(data_path):
+        print(f"Carregando dados reais de: {data_path}")
+        data = pd.read_csv(data_path)
+    else:
+        print("Dados reais não encontrados, utilizando dados dummy...")
+        data = pd.DataFrame({
+            'text': [
+                'Não consigo fazer login, o sistema dá erro!',
+                'Obrigado pelo atendimento, tudo perfeito!',
+                'Preciso de reembolso da última compra',
+                'O app crashes ao abrir a tela de perfil',
+            ],
+            'sentiment': ['negativo', 'positivo', 'neutro', 'negativo'],
+            'tags': [
+                'login|problema_técnico',
+                'atendimento',
+                'reembolso',
+                'problema_técnico|app',
+            ],
+        })
 
     result = train_baseline(data)
-    print('=== SENTIMENTO ===')
+    print('\n=== SENTIMENTO ===')
     print(f"Accuracy: {result['sent_metrics']['accuracy']:.4f}")
     print(f"F1 macro: {result['sent_metrics']['f1_macro']:.4f}")
     print('\n=== TAGS ===')
     print(f"Hamming loss: {result['tags_metrics']['hamming_loss']:.4f}")
-    print(f"F1 samples: {result['tags_metrics']['f1_samples']:.4f}")
+    print(f"F1 samples: {result['tags_metrics']['f1_samples']:.4f}")

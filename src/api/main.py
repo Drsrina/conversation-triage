@@ -7,6 +7,8 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
 
+from pydantic import BaseModel
+
 from src.models.predict import TriageClassifier
 
 app = FastAPI(
@@ -24,15 +26,16 @@ if os.path.isdir(STATIC_DIR):
 _classifier = TriageClassifier()
 
 
-class PredictRequest:
+class PredictRequest(BaseModel):
     """Schema de entrada."""
     conversation: str
 
 
-class PredictResponse:
+class PredictResponse(BaseModel):
     """Schema de saída."""
     sentiment: str
     tags: List[str]
+
 
 
 @app.get("/", response_class=HTMLResponse)

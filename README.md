@@ -1,5 +1,7 @@
 # 🧠 Conversation Triage
 
+Repositório de aprofundamento e estudo, sobre Processos de Machine Learning e NLP.
+
 Classificador de conversas de atendimento: **sentimento** (single-label) + **tags** (multi-label), servido como API FastAPI no Cloud Run.
 
 ## O que faz
@@ -52,11 +54,12 @@ curl -X POST http://localhost:8000/predict \
   -d '{"conversation": "Não consigo fazer login"}'
 ```
 
-## Métricas
+## Métricas (M1: Baseline TF-IDF + Regressão Logística)
 
 | Métrica | Valor |
 |---|---|
-| Accuracy (sentimento) | TBD |
-| F1 macro (sentimento) | TBD |
-| Hamming loss (tags) | TBD |
-| F1 samples (tags) | TBD |
+| Accuracy (sentimento) | 0.7684 (76.84%) |
+| F1 macro (sentimento) | 0.7644 (76.44%) |
+| Hamming loss (tags) | 0.1019 |
+| F1 samples (tags) | 0.1789 |
+
